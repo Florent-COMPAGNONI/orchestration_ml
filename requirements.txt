@@ -1,6 +1,9 @@
 openmeteo-requests
 requests-cache
 retry-requests 
-numpy 
+numpy
 pandas
 jupyter
+tensorflow-cpu
+scikit-learn
+matplotlib
