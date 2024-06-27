@@ -6,7 +6,7 @@ import tensorflow as tf
 import pandas as pd
 
 # Charger le modèle Keras
-model = tf.keras.models.load_model('static/model/lstm_v1.keras')
+model = tf.keras.models.load_model('static/models/lstm_v1.keras')
 
 app = FastAPI()
 
