@@ -1,4 +1,4 @@
-**.csv
+static/dataset/*.csv
 .cache.sqlite
 .env
 __pycache__/*

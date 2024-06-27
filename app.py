@@ -8,45 +8,45 @@ import tensorflow as tf
 import pandas as pd
 
 # Charger le modèle Keras
-model = tf.keras.models.load_model("static/models/lstm_v1.keras")
-scaler_features = joblib.load("./static/scalers/scaler_features_v1.pkl")
-scaler_target = joblib.load("./static/scalers/scaler_target_v1.pkl")
+model = tf.keras.models.load_model("/app/static/models/lstm_v1.keras")
+scaler_features = joblib.load("/app/static/scalers/scaler_features_v1.pkl")
+scaler_target = joblib.load("/app/static/scalers/scaler_target_v1.pkl")
 
 app = FastAPI()
 
 
-class WeatherParams(BaseModel):
-    date: datetime.datetime
-    temperature_2m: float
-    relative_humidity_2m: float
-    dew_point_2m: float
-    apparent_temperature: float
-    precipitation: float
-    rain: float
-    snowfall: float
-    snow_depth: float
-    weather_code: int
-    pressure_msl: float
-    surface_pressure: float
-    cloud_cover: float
-    cloud_cover_low: float
-    cloud_cover_mid: float
-    cloud_cover_high: float
-    et0_fao_evapotranspiration: float
-    vapour_pressure_deficit: float
-    wind_speed_10m: float
-    wind_speed_100m: float
-    wind_direction_10m: float
-    wind_direction_100m: float
-    wind_gusts_10m: float
-    soil_temperature_0_to_7cm: float
-    soil_temperature_7_to_28cm: float
-    soil_temperature_28_to_100cm: float
-    soil_temperature_100_to_255cm: float
-    soil_moisture_0_to_7cm: float
-    soil_moisture_7_to_28cm: float
-    soil_moisture_28_to_100cm: float
-    soil_moisture_100_to_255cm: float
+# class WeatherParams(BaseModel):
+#     date: datetime.datetime
+#     temperature_2m: float
+#     relative_humidity_2m: float
+#     dew_point_2m: float
+#     apparent_temperature: float
+#     precipitation: float
+#     rain: float
+#     snowfall: float
+#     snow_depth: float
+#     weather_code: int
+#     pressure_msl: float
+#     surface_pressure: float
+#     cloud_cover: float
+#     cloud_cover_low: float
+#     cloud_cover_mid: float
+#     cloud_cover_high: float
+#     et0_fao_evapotranspiration: float
+#     vapour_pressure_deficit: float
+#     wind_speed_10m: float
+#     wind_speed_100m: float
+#     wind_direction_10m: float
+#     wind_direction_100m: float
+#     wind_gusts_10m: float
+#     soil_temperature_0_to_7cm: float
+#     soil_temperature_7_to_28cm: float
+#     soil_temperature_28_to_100cm: float
+#     soil_temperature_100_to_255cm: float
+#     soil_moisture_0_to_7cm: float
+#     soil_moisture_7_to_28cm: float
+#     soil_moisture_28_to_100cm: float
+#     soil_moisture_100_to_255cm: float
 
 
 # Helper function to prepare data for prediction
@@ -58,9 +58,15 @@ def prepare_data(features, scaler_features, time_step=24):
     return np.array(X)
 
 
-@app.post("/predict/")
-async def predict(request: list[WeatherParams]):
-    file_path = "weather_data_2024_06_25.csv"
+def get_file_path(local=False):
+    if local:
+        return "weather_data_2024_06_25.csv"
+    return "/app/weather_data_2024_06_25.csv"
+
+
+@app.get("/predict/")
+async def predict():
+    file_path = get_file_path()
 
     # Read the CSV file
     features = pd.read_csv(file_path)
