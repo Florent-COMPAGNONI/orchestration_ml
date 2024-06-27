@@ -14,7 +14,7 @@ errors:
     from: hello@kestra.io
     to: "daoudhandas@gmail.com, florentcompagnoni@gmail.com, nievjimmy3@gmail.com, chn.mikky@gmail.com"
     username: "kestra.alert@gmail.com"
-    password: "auiw izsa wpjd ague"
+    password: '{{ envs.smtp_gmail }}'
     host: smtp.gmail.com
     port: 465
     subject: "Kestra workflow failed for the flow {{flow.id}} in the namespace {{flow.namespace}}"
