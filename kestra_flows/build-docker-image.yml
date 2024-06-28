@@ -50,4 +50,15 @@ tasks:
             --service-account=weather-forecast-sa@weather-forecast-427613.iam.gserviceaccount.com
             --command="/app/entrypoint.sh"
             --port=8080
-            
+
+errors:
+  - id: send_email
+    type: io.kestra.plugin.notifications.mail.MailSend
+    from: hello@kestra.io
+    to: "daoudhandas@gmail.com, florentcompagnoni@gmail.com, nievjimmy3@gmail.com, chn.mikky@gmail.com"
+    username: "kestra.alert@gmail.com"
+    password: "{{ envs.smtp_gmail }}"
+    host: smtp.gmail.com
+    port: 465
+    subject: "Kestra workflow failed for the flow {{flow.id}} in the namespace {{flow.namespace}}"
+    htmlTextContent: "Failure alert for flow {{ flow.namespace }}.{{ flow.id }} with ID {{ execution.id }}"
