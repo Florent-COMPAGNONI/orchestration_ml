@@ -1,5 +1,4 @@
-import datetime
-
+from datetime import datetime
 from fastapi import FastAPI, HTTPException
 import joblib
 import numpy as np
