@@ -1,6 +1,6 @@
 id: build-docker-image 
 namespace: esgi.iabd
-description: Build Docker image from repo andpostit to Artifact  Registry 
+description: Build Docker image from repo and post it to Artifact  Registry 
 
 labels:
   env: dev
@@ -18,7 +18,7 @@ tasks:
       - id: cloneRepository
         type: io.kestra.plugin.git.Clone
         url: https://github.com/Florent-COMPAGNONI/orchestration_ml.git
-        branch: feature/train_flow
+        branch: main
       
       - id: fetchAuthToken
         type: io.kestra.plugin.gcp.auth.OauthAccessToken
@@ -36,3 +36,29 @@ tasks:
         credentials:
           username: oauth2accesstoken
           password: "{{ outputs.fetchAuthToken.accessToken.tokenValue }}"
+      
+      - id: updateCloudRunService
+        type: io.kestra.plugin.gcp.cli.GCloudCLI
+        serviceAccount: "{{ envs.gcp_sa_key }}"
+        projectId: weather-forecast-427613
+        outputFiles:
+          - storage.json
+        commands:
+          - gcloud run services update weather-api
+            --image europe-west9-docker.pkg.dev/weather-forecast-427613/app/app_image:{{ inputs.version }}
+            --region=europe-west9
+            --service-account=weather-forecast-sa@weather-forecast-427613.iam.gserviceaccount.com
+            --command="/app/entrypoint.sh"
+            --port=8080
+
+errors:
+  - id: send_email
+    type: io.kestra.plugin.notifications.mail.MailSend
+    from: hello@kestra.io
+    to: "daoudhandas@gmail.com, florentcompagnoni@gmail.com, nievjimmy3@gmail.com, chn.mikky@gmail.com"
+    username: "kestra.alert@gmail.com"
+    password: "{{ envs.smtp_gmail }}"
+    host: smtp.gmail.com
+    port: 465
+    subject: "Kestra workflow failed for the flow {{flow.id}} in the namespace {{flow.namespace}}"
+    htmlTextContent: "Failure alert for flow {{ flow.namespace }}.{{ flow.id }} with ID {{ execution.id }}"

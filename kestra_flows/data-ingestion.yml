@@ -1,6 +1,10 @@
-id: data_ingestion
-namespace: dev
-description: Fetch weather data from Open Meteo API, process the response, and upload the CSV to a bucket
+id: data-ingestion
+namespace: esgi.iabd
+description: Fetch API data on a daily basis
+
+labels:
+  env: dev
+  project: weather-forecast
 
 inputs:
   - id: version
@@ -13,18 +17,11 @@ triggers:
     cron: "0 23 * * *"  # Trigger every day at 23:00
 
 tasks:
-  - id: workingDirectory
-    type: io.kestra.plugin.core.flow.WorkingDirectory
-    tasks:
-      - id: cloneRepository
-        type: io.kestra.plugin.git.Clone
-        url: https://github.com/Florent-COMPAGNONI/orchestration_ml.git
-        branch: features/data_ingestion
-      
-      - id: fetchAuthToken
-        type: io.kestra.plugin.gcp.auth.OauthAccessToken
-        projectId: weather-forecast-427613
-        serviceAccount: '{{ envs.gcp_sa_key }}'
+
+  - id: fetchAuthToken
+    type: io.kestra.plugin.gcp.auth.OauthAccessToken
+    projectId: weather-forecast-427613
+    serviceAccount: '{{ envs.gcp_sa_key }}'
 
   - id: run-script
     type: io.kestra.plugin.docker.Run
@@ -44,3 +41,15 @@ tasks:
 
     to: "gs://easgi-iabd-weather-data/weather_data_{{ now() | dateAdd(-2, 'DAYS') | date('YYYY_MM_dd') }}.csv"
     serviceAccount: "{{ envs.gcp_sa_key }}"
+
+errors:
+  - id: send_email
+    type: io.kestra.plugin.notifications.mail.MailSend
+    from: hello@kestra.io
+    to: "daoudhandas@gmail.com, florentcompagnoni@gmail.com, nievjimmy3@gmail.com, chn.mikky@gmail.com"
+    username: "kestra.alert@gmail.com"
+    password: "{{ envs.smtp_gmail }}"
+    host: smtp.gmail.com
+    port: 465
+    subject: "Kestra workflow failed for the flow {{flow.id}} in the namespace {{flow.namespace}}"
+    htmlTextContent: "Failure alert for flow {{ flow.namespace }}.{{ flow.id }} with ID {{ execution.id }}"
