@@ -17,4 +17,4 @@ EXPOSE 11211
 
 COPY . .
 
-RUN chmod +x /entrypoint.sh
+RUN chmod +x ./entrypoint.sh
