@@ -1,5 +1,10 @@
-id: onFailureAlert
-namespace: dev
+id: on-failure-alert
+namespace: esgi.iabd
+description: Send email alert whenflow fail
+
+labels:
+  env: dev
+  project: weather-forecast
 
 tasks:
   - id: fail
