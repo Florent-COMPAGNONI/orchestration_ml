@@ -16,3 +16,5 @@ RUN apt-get update && \
 EXPOSE 11211
 
 COPY . .
+
+RUN chmod +x /entrypoint.sh
