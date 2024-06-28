@@ -5,5 +5,5 @@ numpy
 pandas
 tensorflow-cpu
 scikit-learn
-
 fastapi
+pymemcache
