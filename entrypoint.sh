@@ -1,5 +1,6 @@
 #!/bin/sh
 
+cd /app
 # Start Memcached in the background
 memcached -d
 
@@ -29,4 +30,5 @@ except Exception as e:
 "
 
 # Start the application
+cd /app
 uvicorn app:app --host 0.0.0.0 --port 8080
