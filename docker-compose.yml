@@ -1,3 +1,5 @@
+version: "3"
+
 volumes:
   postgres-data:
     driver: local
@@ -21,8 +23,7 @@ services:
 
   kestra:
     image: kestra/kestra:latest-full
-    pull_policy: always
-    # Note that this is meant for development only. Refer to the documentation for production deployments of Kestra which runs without a root user.
+    restart: always
     user: "root"
     command: server standalone --worker-thread=128
     volumes:
@@ -43,7 +44,7 @@ services:
           server:
             basic-auth:
               enabled: false
-              username: "admin@kestra.io" # it must be a valid email address
+              username: "admin@kestra.io"
               password: kestra
           repository:
             type: postgres
@@ -61,8 +62,4 @@ services:
       - "8080:8080"
       - "8081:8081"
     depends_on:
-      postgres:
-        condition: service_started
-
-# docker-compose up -d
-# docker exec -it kestra-server printenv SECRET_GCP_SA_KEY
+      - postgres
