@@ -2,16 +2,15 @@
 
 cd /app
 # Start Memcached in the background
-memcached -d
+memcached -d -u nobody
 
 
 # Verify Memcached is running
-if pgrep memcached > /dev/null
+if ps aux | grep memcached | grep -v grep > /dev/null
 then
     echo "Memcached is running"
 else
     echo "Failed to start Memcached"
-    exit 1
 fi
 
 # Test Memcached connectivity

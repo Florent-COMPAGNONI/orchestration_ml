@@ -13,7 +13,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Expose the default Memcached port
-EXPOSE 11211
+# EXPOSE 11211
 
 COPY . .
 
