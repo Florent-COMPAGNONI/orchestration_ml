@@ -37,7 +37,8 @@ def main():
         })
 
         hour = st.sidebar.slider("hour", 0, 23)
-        hour_string = str(hour % 12) + ' pm' if hour > 12 else str(hour) + ' am'
+        hour_string = "12" if hour == 0 else str(hour)
+        hour_string = hour_string + ' pm' if hour > 11 else hour_string + ' am'
 
         st.header('Look close by hour', divider='rainbow')
         st.subheader(f"At {hour_string} :sunglasses:")
