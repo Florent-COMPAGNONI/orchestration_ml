@@ -17,4 +17,6 @@ RUN apt-get update && \
 
 COPY . .
 
+# EXPOSE 8000
+
 RUN chmod +x ./entrypoint.sh
