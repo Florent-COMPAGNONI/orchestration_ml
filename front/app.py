@@ -37,7 +37,7 @@ def main():
         })
 
         hour = st.sidebar.slider("hour", 0, 23)
-        hour_string = "12" if hour == 0 else str(hour)
+        hour_string = "12" if hour == 0 else str(hour % 12)
         hour_string = hour_string + ' pm' if hour > 11 else hour_string + ' am'
 
         st.header('Look close by hour', divider='rainbow')
