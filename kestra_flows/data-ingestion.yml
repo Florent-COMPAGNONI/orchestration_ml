@@ -17,18 +17,11 @@ triggers:
     cron: "0 23 * * *"  # Trigger every day at 23:00
 
 tasks:
-  - id: workingDirectory
-    type: io.kestra.plugin.core.flow.WorkingDirectory
-    tasks:
-      - id: cloneRepository
-        type: io.kestra.plugin.git.Clone
-        url: https://github.com/Florent-COMPAGNONI/orchestration_ml.git
-        branch: features/data_ingestion
-      
-      - id: fetchAuthToken
-        type: io.kestra.plugin.gcp.auth.OauthAccessToken
-        projectId: weather-forecast-427613
-        serviceAccount: '{{ envs.gcp_sa_key }}'
+
+  - id: fetchAuthToken
+    type: io.kestra.plugin.gcp.auth.OauthAccessToken
+    projectId: weather-forecast-427613
+    serviceAccount: '{{ envs.gcp_sa_key }}'
 
   - id: run-script
     type: io.kestra.plugin.docker.Run
